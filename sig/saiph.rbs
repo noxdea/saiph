@@ -1,0 +1,25 @@
+module Saiph
+  VERSION: String
+
+  class Error < StandardError
+  end
+
+  class Unsupported < Error
+  end
+
+  class Policy
+    attr_reader read_paths: Array[String]
+    attr_reader write_paths: Array[String]
+    attr_reader network: bool
+    attr_reader exec: bool
+    attr_reader env: Array[String]
+
+    def self.new: (Array[String] read_paths, Array[String] write_paths, bool network, bool exec, Array[String] env) -> Policy
+                | (read_paths: Array[String], write_paths: Array[String], network: bool, exec: bool, env: Array[String]) -> Policy
+  end
+
+  def self.available?: () -> bool
+  def self.backend: () -> (:seatbelt | :seccomp | :appcontainer)?
+  def self.spawn: (String | Array[String] command, policy: Policy, **untyped options) -> Integer
+  def self.apply!: (Policy policy) -> bool
+end
