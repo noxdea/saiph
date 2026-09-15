@@ -91,6 +91,8 @@ on Windows; AppContainer tokens must be selected at process creation.
 - Policy transfer uses a private inherited pipe, not a temporary file.
 - Backend probes run in disposable children because Unix restrictions cannot be
   relaxed.
+- Linux blocks signal delivery to host processes in addition to ptrace and
+  cross-process memory access.
 - AppContainer profiles, native handles, pipes, and Landlock descriptors are
   closed on both success and failure.
 

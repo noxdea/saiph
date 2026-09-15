@@ -60,7 +60,8 @@ module Saiph
           userfaultfd: 323, kexec_load: 246, finit_module: 313, init_module: 175, delete_module: 176,
           reboot: 169, swapon: 167, swapoff: 168, mount: 165, umount2: 166, pivot_root: 155,
           setns: 308, unshare: 272, keyctl: 250, add_key: 248, request_key: 249,
-          process_vm_readv: 310, process_vm_writev: 311, open_by_handle_at: 304,
+          process_vm_readv: 310, process_vm_writev: 311, open_by_handle_at: 304, kill: 62, tkill: 200,
+          tgkill: 234, rt_sigqueueinfo: 129, rt_tgsigqueueinfo: 297, pidfd_send_signal: 424,
           socket: 41, connect: 42, accept: 43, sendto: 44, recvfrom: 45, sendmsg: 46, recvmsg: 47,
           bind: 49, listen: 50, socketpair: 53, accept4: 288, recvmmsg: 299, sendmmsg: 307
         },
@@ -69,9 +70,10 @@ module Saiph
           kexec_load: 104, finit_module: 273, init_module: 105, delete_module: 106, reboot: 142,
           swapon: 224, swapoff: 225, mount: 40, umount2: 39, pivot_root: 41, setns: 268,
           unshare: 97, keyctl: 219, add_key: 217, request_key: 218, process_vm_readv: 270,
-          process_vm_writev: 271, open_by_handle_at: 265, socket: 198, socketpair: 199, bind: 200,
-          listen: 201, accept: 202, connect: 203, sendto: 206, recvfrom: 207, sendmsg: 211,
-          recvmsg: 212, accept4: 242, recvmmsg: 243, sendmmsg: 269
+          process_vm_writev: 271, open_by_handle_at: 265, kill: 129, tkill: 130, tgkill: 131,
+          rt_sigqueueinfo: 138, rt_tgsigqueueinfo: 240, pidfd_send_signal: 424, socket: 198,
+          socketpair: 199, bind: 200, listen: 201, accept: 202, connect: 203, sendto: 206,
+          recvfrom: 207, sendmsg: 211, recvmsg: 212, accept4: 242, recvmmsg: 243, sendmmsg: 269
         }
       }.freeze
 
@@ -163,7 +165,7 @@ module Saiph
         calls = syscall_table
         denied = %i[ptrace bpf perf_event_open userfaultfd kexec_load finit_module init_module delete_module reboot
           swapon swapoff mount umount2 pivot_root setns unshare keyctl add_key request_key process_vm_readv
-          process_vm_writev open_by_handle_at]
+          process_vm_writev open_by_handle_at kill tkill tgkill rt_sigqueueinfo rt_tgsigqueueinfo pidfd_send_signal]
         denied.concat(%i[socket socketpair bind listen accept accept4 connect sendto recvfrom sendmsg recvmsg recvmmsg sendmmsg]) unless policy.network
         filters = [[BPF_LD_W_ABS, 0, 0, 4], [BPF_JMP_JEQ_K, 1, 0, audit_arch], [BPF_RET_K, 0, 0, SECCOMP_RET_KILL_PROCESS], [BPF_LD_W_ABS, 0, 0, 0]]
         unless policy.exec

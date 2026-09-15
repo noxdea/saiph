@@ -116,6 +116,12 @@ class SaiphTest < Minitest::Test
     assert_predicate sandbox_exit(code, policy), :success?
   end
 
+  def test_signalling_host_processes_is_denied
+    code = 'begin; Process.kill(0, Process.ppid); exit!(1); rescue Errno::EACCES, Errno::EPERM; exit!(0); end'
+
+    assert_predicate sandbox_exit(code, policy), :success?
+  end
+
   def test_child_process_creation_can_be_declared
     code = 'exit!(system(RbConfig.ruby, "-e", "exit!(0)") ? 0 : 1)'
 
