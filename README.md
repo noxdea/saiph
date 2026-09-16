@@ -1,12 +1,41 @@
-# Saiph
+<h1 align="center">Saiph</h1>
+
+<p align="center">
+  <strong>Fail-closed native process sandboxing for Ruby</strong>
+</p>
+
+<p align="center">
+  <a href="https://rubygems.org/gems/saiph"><img src="https://img.shields.io/gem/v/saiph.svg?colorB=319e8c" alt="Gem Version"></a>
+  <a href="https://rubygems.org/gems/saiph"><img src="https://img.shields.io/gem/dt/saiph.svg" alt="Downloads"></a>
+  <img src="https://img.shields.io/badge/ruby-%3E%3D%203.1-ruby.svg" alt="Ruby Version">
+  <a href="LICENSE.txt"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
+</p>
+
+<p align="center">
+  <a href="#features">Features</a> ·
+  <a href="#installation">Installation</a> ·
+  <a href="#quick-start">Quick Start</a> ·
+  <a href="#backends">Backends</a> ·
+  <a href="#security-and-cleanup">Security</a>
+</p>
+
+---
 
 Saiph applies native operating-system restrictions to child processes. It is a
-small, Pure Ruby boundary for running untrusted plugins without depending on an
+small, pure Ruby boundary for running untrusted plugins without depending on an
 editor or plugin API.
 
 Saiph fails closed. `available?` is true only after the native backend passes a
 local capability probe, and a child exits with status 126 if setup fails. Saiph
 never substitutes an ordinary unsandboxed process.
+
+## Features
+
+- Native sandbox backends for macOS, Linux, and Windows
+- Immutable allowlist policies for files, networking, processes, and environment variables
+- Fail-closed capability probing and sandbox setup
+- Shell-free process spawning with standard Ruby redirection options
+- Small pure Ruby API over native operating-system facilities
 
 ## Installation
 
@@ -16,7 +45,7 @@ bundle add saiph
 
 Saiph supports Ruby 3.1 and later.
 
-## Usage
+## Quick Start
 
 ```ruby
 require "saiph"
@@ -44,6 +73,8 @@ pid = Saiph.spawn(
 status = Process.waitpid2(pid).last
 raise "sandbox setup failed" if status.exitstatus == 126
 ```
+
+## Policies
 
 `spawn` returns a process ID and accepts normal `Process.spawn` redirections
 and options. Pass the command as an argument array. A string is treated as one
@@ -109,6 +140,10 @@ BUDGET=1 bundle exec rake bench
 gem build --strict saiph.gemspec
 ```
 
+## Contributing
+
+Bug reports and pull requests are welcome at https://github.com/noxdea/saiph.
+
 ## License
 
-MIT.
+Saiph is available under the [MIT License](LICENSE.txt).
