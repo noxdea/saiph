@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#060a13">
+  <meta name="description" content="Saiph provides fail-closed native process sandboxing for Ruby.">
+  <title>Saiph — Native process sandboxing for Ruby</title>
+  <link rel="stylesheet" href="site.css">
+</head>
+<body style="--accent:#ff8f80">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="#"><span class="star-mark"></span>Saiph</a>
+    <nav aria-label="Primary navigation"><a href="#features">Capabilities</a><a href="#install">Install</a><a href="https://github.com/noxdea/saiph">GitHub</a></nav>
+  </header>
+  <main id="main">
+    <section class="hero">
+      <div>
+        <p class="constellation">κ Orionis · process isolation</p>
+        <h1>Trust the boundary.</h1>
+        <p class="lede">Fail-closed native operating-system restrictions for Ruby child processes, expressed as a small immutable allowlist policy.</p>
+        <div class="actions"><a class="button primary" href="#install">Install Saiph</a><a class="button" href="https://github.com/noxdea/saiph">View source</a></div>
+        <ul class="facts"><li><strong>macOS · Linux · Windows</strong></li><li>Ruby ≥ 3.1</li><li>MIT licensed</li></ul>
+      </div>
+      <div class="instrument" aria-label="Sandbox policy boundary example">
+        <div class="instrument-head"><span>sandbox / plugin.rb</span><span class="signal">enforced</span></div>
+        <div class="instrument-body">
+          <div class="diagram">
+            <span class="orbit" aria-hidden="true"></span>
+            <div class="node nw"><strong>Filesystem</strong>read 1 path<br>write 1 path</div>
+            <div class="node ne"><strong>Network</strong>denied</div>
+            <div class="node core"><strong>Child process</strong>pid 4812<br>restricted</div>
+            <div class="node sw"><strong>Environment</strong>LANG only</div>
+            <div class="node se"><strong>Descendants</strong>denied</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="features" id="features">
+      <div class="section-heading"><h2>Fail closed, everywhere.</h2><p>Saiph reports availability only after a native capability probe succeeds. If restriction setup fails, the child exits instead of silently running unsandboxed.</p></div>
+      <div class="feature-grid">
+        <article><h3>Native enforcement</h3><p>Seatbelt on macOS, namespaces with Landlock and seccomp on Linux, and AppContainer on Windows.</p></article>
+        <article><h3>Immutable policy</h3><p>Allow only specific paths, network access, descendant processes, and environment names.</p></article>
+        <article><h3>Shell-free launch</h3><p>Spawn argument arrays with normal Ruby redirections while keeping policy transfer private.</p></article>
+      </div>
+    </section>
+    <section class="install" id="install">
+      <div class="install-copy"><h2>Draw the boundary.</h2><p>Describe the minimum capability set, probe the backend, then launch.</p></div>
+      <div class="terminal"><div class="terminal-bar">Ruby</div><pre><span class="prompt">$</span> bundle add saiph
+
+policy = Saiph::Policy.new(
+  read_paths: ["/app/plugin.rb"],
+  write_paths: ["/app/tmp"],
+  network: false, exec: false,
+  env: ["LANG"]
+)
+Saiph.spawn([RbConfig.ruby, "plugin.rb"], policy:)</pre></div>
+    </section>
+  </main>
+  <footer><p>Saiph · Pure Ruby · MIT</p><div><a href="https://rubygems.org/gems/saiph">RubyGems</a><a href="https://github.com/noxdea/saiph">GitHub</a></div></footer>
+</body>
+</html>
